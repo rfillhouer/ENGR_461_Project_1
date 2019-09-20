@@ -1,3 +1,4 @@
+%% Variables
 tfinal = 15
 c1 = .05  
 z = .416/3
@@ -7,25 +8,34 @@ l = 2
 c = 120 
 wd = (sqrt(1-z^2))*wn
 c2 = (.5+z*wn*c1)/(wd)
-% s = tf('s')
+
+
+%% 
 syms s
 Gs = exp(-z*wn*s)*(c1*cos(sqrt(1-z^2)*wn*s)+c2*sin(sqrt(1-z^2)*wn*s))
-fplot( Gs)
 
 
-ylim([-.5 .5])
+%% System Response
+figure
+fplot(Gs)
+ylim([-.5 .3])
 xlim([0 15])
+
+%% Spring Force Response
 figure
 k= 1000
 Fs= Gs*k*l*.5
-fplot( Fs)
+fplot(Fs)
 xlim([0 15])
+ylim([-300 300])
+
+
+%% Damper Force Response
 figure
 Hs = -z*wn*exp(-z*wn*s)*(c1*cos(wd*s)+c2*sin(wd*s))+exp(-z*wn*s)*(-c1*wd*sin(wd*s)+c2*wd*cos(wd*s))
 Cs = c*l*Hs
-fplot( Cs)
+fplot(Cs)
 xlim([0 15])
+ylim([-150 150])
 
-t = 0:.01:15
-Ct = c*l*(-z)*wn*exp(-z*wn.*t)*(c1*cos(wd.*t)+c2*sin(wd.*t))+exp(-z*wn.*t)*(-c1*wd*sin(wd.*t)+c2*wd*cos(wd.*t))
 
