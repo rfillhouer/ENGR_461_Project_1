@@ -1,41 +1,74 @@
+%% ENGR 461 -01 Mechanical and Structural Vibrations
+% Project 1
+% Professor Chen
+% 
+% Group 2:
+% Ryan Fillhouer
+% Chris Esquivel
+% Brandon Clark
+% Alex Nguyen
+
+
 %% Variables
-tfinal = 15
-c1 = .05  
-z = .416/3
-wn = 1.732 
-m = 250
-l = 2 
-c = 120 
-wd = (sqrt(1-z^2))*wn
-c2 = (.5+z*wn*c1)/(wd)
+c1 = .05;
+wn = 1.732;
+m = 250;
+l = 2;
+c = 120;
+z = c/(2*m*wn);
+wd = (sqrt(1-z^2))*wn;
+c2 = (.5+z*wn*c1)/(wd);
 
 
 %% 
-syms s
-Gs = exp(-z*wn*s)*(c1*cos(sqrt(1-z^2)*wn*s)+c2*sin(sqrt(1-z^2)*wn*s))
+syms t
+
+theta = exp(-z*wn*t)*(c1*cos(sqrt(1-z^2)*wn*t)+c2*sin(sqrt(1-z^2)*wn*t))
 
 
 %% System Response
 figure
-fplot(Gs)
-ylim([-.5 .3])
+fplot(theta)
+ylim([-.2 .3])
 xlim([0 15])
+title('Displacement of Beam')
+xlabel('Time, t (s)')
+ylabel('Angular Displacement, \theta(t), (Radians)')
+
 
 %% Spring Force Response
 figure
 k= 1000
-Fs= Gs*k*l*.5
+Fs= theta*k*l*.5
+
 fplot(Fs)
 xlim([0 15])
 ylim([-300 300])
+title('Spring Force Response')
+xlabel('Time, t (s)')
+ylabel('Force of Spring, F_s(t), (N)')
 
 
 %% Damper Force Response
 figure
-Hs = -z*wn*exp(-z*wn*s)*(c1*cos(wd*s)+c2*sin(wd*s))+exp(-z*wn*s)*(-c1*wd*sin(wd*s)+c2*wd*cos(wd*s))
-Cs = c*l*Hs
-fplot(Cs)
+Fc = c*l*diff(theta)
+
+fplot(Fc)
 xlim([0 15])
 ylim([-150 150])
+title('Damper Force Response')
+xlabel('Time, t (s)')
+ylabel('Force of Damper, F_c(t), (N)')
 
+
+%% Forces at hinge
+
+Fa = -m*l/2 * diff(diff(theta)) + c*l*diff(theta) + k*l/2 * theta
+
+fplot(Fa)
+xlim([0 15])
+ylim([-500 500])
+title('Hinge Force Response')
+xlabel('Time, t (s)')
+ylabel('Force at Hinge, F_A(t), (N)')
 
